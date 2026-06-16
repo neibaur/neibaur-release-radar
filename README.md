@@ -1,48 +1,90 @@
 # BigQuery Release Radar 📡
 
-A premium web application built using **Python Flask**, **Vanilla JavaScript**, **CSS**, and **HTML** that parses the live Google Cloud BigQuery Release Notes feed, visualizes update categories, and enables seamless sharing via Twitter/X.
+A premium dashboard application built using **Python Flask**, **Vanilla JavaScript**, **Vanilla CSS**, and **HTML** that fetches, parses, and formats the live Google Cloud BigQuery Release Notes feed into structured components, enabling instant search and seamless sharing on Twitter/X.
 
-## Features
+---
 
-- **Granular Update Parsing**: Automatically fetches the official Atom XML feed (`https://docs.cloud.google.com/feeds/bigquery-release-notes.xml`) and parses complex daily content blocks into separate, structured cards by update types (`Feature`, `Change`, `Announcement`, `Breaking`, `Issue`).
-- **Modern Glassmorphic Dashboard**: A stunning dark-mode dashboard styled with Outfit and Inter typography, subtle gradients, backdrop-filters, and glowing elements.
-- **Dynamic Stats Bar**: Real-time counter widgets tracking total items, features, issues, and change frequencies.
-- **Instant Keyword Filter**: Search and filter updates instantly by key terms (e.g. `Gemini`, `UDF`, `Iceberg`, `April 2026`).
-- **Category Filter Tabs**: Quick filtering of the feed by clicking on category tags (Features, Changes, Announcements, Breaking, Issues).
-- **Interactive X (Twitter) Composer**: 
-  - Click any card to launch a custom Twitter composer dialog.
-  - Includes a **live mock Twitter card preview** that updates in real-time as you edit.
-  - Integrated **character progress ring** and counter that warns you when approaching or exceeding the 280-character limit.
-  - Single-click action to redirect to X's Web Intent API with pre-populated message contents.
-- **Copy Text Action**: Single-button card copy action that formats the update and its deep-link for instant pasting.
-- **State Synchronizer**: A manual "Sync Feed" refresh button equipped with spinning loader animation and cached state updates.
+## 🌟 Main Features
 
-## Project Structure
+- **Granular Entry Parsing**: Splits combined daily release entries (which can bundle multiple updates) into individual, categorizable cards based on their update type (`Feature`, `Change`, `Announcement`, `Breaking`, `Issue`).
+- **Glassmorphic Design**: A modern dark-mode dashboard styled with Google Fonts (Outfit & Inter), radial gradients, backdrop-filters, custom scrollbars, and micro-interactions.
+- **Dynamic Statistics Counter**: An animated metrics bar calculating frequencies of parsed updates per category on load or refresh.
+- **Real-Time Keyword & Tag Filters**: Fast client-side search indexing that filters results instantly as you type or select category tags.
+- **Interactive Tweet Composer**:
+  - Click any card's Twitter icon to open a custom composer modal.
+  - Features a **live mock Twitter/X card preview** mirroring your edits.
+  - Includes a **circular SVG progress indicator** that tracks the 280-character limit (turning yellow at 260, and red/disabling posting at 280).
+- **One-Click Copy**: Automatically formats the release note, date, type, and its deep-link for instant pasting.
+- **Live Synchronization**: Manual "Sync Feed" refresh button equipped with spinning loader animation and cached state updates.
+
+---
+
+## 📂 Project Structure
 
 ```text
 agy-cli-projects/
-├── app.py                # Flask Server & ET Atom Parser
-├── requirements.txt      # Project dependencies
+├── app.py                # Flask Server & ElementTree XML Parser
+├── requirements.txt      # Python packages (Flask, requests, bs4)
+├── README.md             # Project documentation
 ├── templates/
 │   └── index.html        # Glassmorphic layout structure
 └── static/
     ├── css/
-    │   └── styles.css    # Premium CSS design tokens & animations
+    │   └── styles.css    # Premium CSS design system & animations
     └── js/
-        └── main.js       # Feed rendering, filtering, & Twitter preview sync
+        └── main.js       # Live search filters & Twitter composer sync
 ```
 
-## Setup & Running Instructions
+---
 
-1. **Install Dependencies**: Make sure you have python installed, then run:
-   ```bash
-   pip install -r requirements.txt
-   ```
+## 🌐 API Reference
 
-2. **Start the Server**: Start the Flask backend by running:
-   ```bash
-   python app.py
-   ```
+### Get Release Notes
+Retrieves the list of parsed release notes.
 
-3. **Open the Application**: Open your browser and navigate to:
-   [http://127.0.0.1:5000](http://127.0.0.1:5000)
+* **URL**: `/api/release-notes`
+* **Method**: `GET`
+* **Query Parameters**:
+  * `refresh` (optional): Set to `true` to force a live fetch from Google Cloud, bypassing the cache.
+* **Success Response (200 OK)**:
+  ```json
+  {
+    "status": "success",
+    "last_fetched": "2026-06-16 10:47:19",
+    "count": 68,
+    "data": [
+      {
+        "id": "june_15_2026_feature_0",
+        "category": "Feature",
+        "date": "June 15, 2026",
+        "html": "<p>Use Gemini Cloud Assist to analyze your SQL queries...</p>",
+        "text": "Use Gemini Cloud Assist to analyze your SQL queries...",
+        "link": "https://docs.cloud.google.com/bigquery/docs/release-notes#June_15_2026"
+      }
+    ]
+  }
+  ```
+
+---
+
+## 🚀 Setup & Execution
+
+### Prerequisites
+- Python 3.8+
+- Active internet connection (for initial feed synchronization)
+
+### 1. Install Dependencies
+Navigate to the project directory and install the required libraries:
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Run the Server
+Launch the Flask development server:
+```bash
+python app.py
+```
+
+### 3. Open the Dashboard
+Navigate to the following address in your browser:
+**[http://127.0.0.1:5000](http://127.0.0.1:5000)**
