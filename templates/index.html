@@ -31,6 +31,14 @@
             </div>
             
             <div class="refresh-controls">
+                <div class="theme-switch-container">
+                    <i class="fa-solid fa-moon theme-icon" title="Dark Mode"></i>
+                    <label class="theme-switch" for="checkbox">
+                        <input type="checkbox" id="checkbox" aria-label="Toggle light/dark theme" />
+                        <div class="slider round"></div>
+                    </label>
+                    <i class="fa-solid fa-sun theme-icon" title="Light Mode"></i>
+                </div>
                 <span class="last-updated-text">Last sync: <span id="sync-time">Loading...</span></span>
                 <button id="export-csv-btn" class="btn btn-secondary" title="Export filtered updates to CSV">
                     <i class="fa-solid fa-file-csv"></i>
