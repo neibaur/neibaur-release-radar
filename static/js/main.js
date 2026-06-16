@@ -3,6 +3,7 @@ let allNotes = [];
 let activeFilter = 'all';
 let searchQuery = '';
 let currentNoteForTweet = null;
+let sortOrder = 'newest';
 
 // DOM Elements
 const feedContainer = document.getElementById('feed-container');
@@ -13,6 +14,7 @@ const syncTimeSpan = document.getElementById('sync-time');
 const searchInput = document.getElementById('search-input');
 const clearSearchBtn = document.getElementById('clear-search-btn');
 const filterTags = document.querySelectorAll('.filter-tag');
+const sortSelect = document.getElementById('sort-select');
 const errorContainer = document.getElementById('error-container');
 const errorMessage = document.getElementById('error-message');
 const retryBtn = document.getElementById('retry-btn');
@@ -94,6 +96,14 @@ function setupEventListeners() {
     // Export CSV button
     if (exportCsvBtn) {
         exportCsvBtn.addEventListener('click', exportToCSV);
+    }
+    
+    // Sort selection change
+    if (sortSelect) {
+        sortSelect.addEventListener('change', (e) => {
+            sortOrder = e.target.value;
+            filterAndRenderNotes();
+        });
     }
     
     // Retry error button
@@ -292,7 +302,13 @@ function filterAndRenderNotes() {
         });
     }
     
-    renderNotes(filtered);
+    // Apply sorting selection
+    let notesToRender = [...filtered];
+    if (sortOrder === 'oldest') {
+        notesToRender.reverse();
+    }
+    
+    renderNotes(notesToRender);
 }
 
 // Render filtered note cards
@@ -524,6 +540,11 @@ function exportToCSV() {
     if (filtered.length === 0) {
         showToast("No release notes found to export.");
         return;
+    }
+
+    // Sort matching screen selection
+    if (sortOrder === 'oldest') {
+        filtered = [...filtered].reverse();
     }
 
     // Build CSV content

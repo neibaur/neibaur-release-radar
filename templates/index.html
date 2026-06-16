@@ -106,7 +106,16 @@
         <section class="feed-section">
             <div class="feed-header">
                 <h2>Release Feed</h2>
-                <div class="feed-results-count" id="results-count">Showing all updates</div>
+                <div class="feed-header-controls">
+                    <div class="sort-control">
+                        <i class="fa-solid fa-arrow-down-up-wide sort-icon"></i>
+                        <select id="sort-select" aria-label="Sort order">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                        </select>
+                    </div>
+                    <div class="feed-results-count" id="results-count">Showing all updates</div>
+                </div>
             </div>
             
             <div id="error-container" class="error-card card-glass fade-in" style="display: none;">

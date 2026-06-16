@@ -93,6 +93,11 @@ body.light-theme #search-input:focus {
     border-color: rgba(66, 133, 244, 0.6);
 }
 
+body.light-theme .filter-hub {
+    background: rgba(241, 245, 249, 0.95);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
 body.light-theme .filter-tag {
     background: rgba(0, 0, 0, 0.03);
     border-color: rgba(0, 0, 0, 0.06);
@@ -409,6 +414,13 @@ body {
     gap: 20px;
     padding: 24px;
     margin-top: 24px;
+    
+    /* Sticky Filter Bar */
+    position: sticky;
+    top: 86px;
+    z-index: 90;
+    background: rgba(13, 20, 38, 0.85);
+    border-color: var(--border-light);
 }
 
 .search-wrapper {
@@ -1276,4 +1288,59 @@ input:checked + .slider {
 input:checked + .slider:before {
     transform: translateX(18px);
     background-color: #ffffff;
+}
+
+/* Sort Control styling */
+.feed-header-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.sort-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 6px 12px;
+    transition: var(--transition-smooth);
+}
+
+.sort-control:hover {
+    border-color: var(--border-hover);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.sort-icon {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.sort-control select {
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    outline: none;
+    cursor: pointer;
+}
+
+.sort-control select option {
+    background: var(--bg-main);
+    color: var(--text-primary);
+}
+
+/* Light theme overrides for sort control */
+body.light-theme .sort-control {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .sort-control select option {
+    background: #ffffff;
+    color: #0f172a;
 }
