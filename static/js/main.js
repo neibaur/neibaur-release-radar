@@ -7,6 +7,7 @@ let currentNoteForTweet = null;
 // DOM Elements
 const feedContainer = document.getElementById('feed-container');
 const refreshBtn = document.getElementById('refresh-btn');
+const exportCsvBtn = document.getElementById('export-csv-btn');
 const syncTimeSpan = document.getElementById('sync-time');
 const searchInput = document.getElementById('search-input');
 const clearSearchBtn = document.getElementById('clear-search-btn');
@@ -66,6 +67,11 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupEventListeners() {
     // Refresh button
     refreshBtn.addEventListener('click', () => fetchReleaseNotes(true));
+    
+    // Export CSV button
+    if (exportCsvBtn) {
+        exportCsvBtn.addEventListener('click', exportToCSV);
+    }
     
     // Retry error button
     retryBtn.addEventListener('click', () => fetchReleaseNotes(true));
@@ -470,4 +476,66 @@ function getSkeletonHTML(count) {
         `;
     }
     return skeletons;
+}
+
+// Export filtered release notes to CSV file
+function exportToCSV() {
+    let filtered = allNotes;
+    
+    // Apply type filter
+    if (activeFilter !== 'all') {
+        filtered = filtered.filter(note => note.category.toLowerCase() === activeFilter);
+    }
+    
+    // Apply search keyword filter
+    if (searchQuery.length > 0) {
+        filtered = filtered.filter(note => {
+            return (
+                note.category.toLowerCase().includes(searchQuery) ||
+                note.text.toLowerCase().includes(searchQuery) ||
+                note.date.toLowerCase().includes(searchQuery)
+            );
+        });
+    }
+
+    if (filtered.length === 0) {
+        showToast("No release notes found to export.");
+        return;
+    }
+
+    // Build CSV content
+    const headers = ["Date", "Category", "Description", "Link"];
+    const csvRows = [
+        headers.join(","),
+        ...filtered.map(note => {
+            const date = note.date;
+            const category = note.category;
+            // Escape double quotes in text
+            const desc = note.text.replace(/"/g, '""');
+            const link = note.link;
+            return `"${date}","${category}","${desc}","${link}"`;
+        })
+    ];
+    
+    const csvContent = csvRows.join("\n");
+    
+    try {
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        const timestamp = new Date().toISOString().slice(0, 10);
+        
+        link.setAttribute("href", url);
+        link.setAttribute("download", `bigquery_release_notes_${timestamp}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        
+        showToast(`Successfully exported ${filtered.length} entries to CSV!`);
+    } catch (err) {
+        console.error("CSV export failed:", err);
+        showToast("Failed to export CSV. Please try again.");
+    }
 }
